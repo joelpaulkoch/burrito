@@ -86,9 +86,14 @@ defmodule Burrito.Steps.Patch.RecompileNIFs do
     # Compose env variables for cross-compilation
     erts_env = erts_make_env(erts_path)
 
+    make_args = case extra_make_args do
+      [] -> ["all", "--always-make"]
+      args -> args
+    end
+
     # This currently is only designed for elixir_make NIFs
     build_result =
-      System.cmd("make", ["all", "--always-make"] ++ extra_make_args,
+      System.cmd("make", make_args,
         cd: path,
         stderr_to_stdout: true,
         env:
